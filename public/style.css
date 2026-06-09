@@ -1,0 +1,1099 @@
+/* =============================================
+   QuickBite – Queue-Free Canteen | style.css
+   All visual styling for the canteen app.
+   EDIT GUIDE: Search for "EDIT" comments below.
+   ============================================= */
+
+
+/* =============================================
+   CSS VARIABLES (Design Tokens)
+   Change these to restyle the ENTIRE app at once.
+   ============================================= */
+:root {
+
+  /* ── Background Colors ── */
+  --bg:      #0d0f14;   /* EDIT: Main page background (very dark navy) */
+  --bg2:     #13161e;   /* EDIT: Slightly lighter background (used in sidebar/modals) */
+  --bg3:     #1a1e2a;   /* EDIT: Third level background (used in hero, cards) */
+  --surface: #1e2231;   /* EDIT: Card/surface background */
+  --surface2:#252a3a;   /* EDIT: Hover state for cards */
+
+  /* ── Border ── */
+  --border: rgba(255,255,255,0.08); /* EDIT: Color of card borders (semi-transparent white) */
+
+  /* ── Primary Brand Color (Orange) ── */
+  --primary:      #ff6b35;              /* EDIT: Main brand color (buttons, prices, highlights) */
+  --primary-dark: #e55520;              /* EDIT: Darker shade of brand color (hover state) */
+  --primary-glow: rgba(255,107,53,0.25);/* EDIT: Glow/shadow of brand color */
+
+  /* ── Accent & Status Colors ── */
+  --accent:     #f7c59f;              /* Light orange accent */
+  --green:      #3ecf8e;              /* EDIT: Color for "Ready" status and Veg badge */
+  --green-bg:   rgba(62,207,142,0.12);/* Background tint for green elements */
+  --yellow:     #f5c842;              /* EDIT: Color for "Preparing" status */
+  --yellow-bg:  rgba(245,200,66,0.12);/* Background tint for yellow elements */
+  --red:        #ff4d4d;              /* EDIT: Color for "Non-veg" badge and errors */
+  --red-bg:     rgba(255,77,77,0.12); /* Background tint for red elements */
+  --blue:       #5b9cf6;              /* EDIT: Color for "Preparing" admin badge */
+
+  /* ── Text Colors ── */
+  --text:       #e8eaf0; /* EDIT: Main text color (light gray-white) */
+  --text-muted: #7a82a0; /* EDIT: Secondary/subdued text */
+  --text-dim:   #4a5068; /* EDIT: Very faded text (timestamps, placeholders) */
+
+  /* ── Shape & Spacing ── */
+  --radius:    16px; /* EDIT: Card corner roundness */
+  --radius-sm: 10px; /* EDIT: Smaller elements corner roundness */
+  --radius-lg: 24px; /* EDIT: Larger elements like hero section */
+
+  /* ── Shadows ── */
+  --shadow:         0 8px 32px rgba(0,0,0,0.4);         /* General card shadow */
+  --shadow-primary: 0 8px 32px rgba(255,107,53,0.3);    /* Brand-colored glow shadow */
+
+  /* ── Animation Speed ── */
+  --transition: 0.22s ease; /* EDIT: How fast hover animations happen */
+
+  /* ── Fonts ── */
+  --font:  'Inter', sans-serif;  /* EDIT: Main body font (must match Google Fonts link in HTML) */
+  --font2: 'Outfit', sans-serif; /* EDIT: Display/heading font (used for logo, prices, titles) */
+}
+
+
+/* =============================================
+   CSS RESET — Removes browser default styles
+   Don't edit this section unless you know CSS
+   ============================================= */
+*, *::before, *::after {
+  box-sizing: border-box; /* Includes padding in element width calculations */
+  margin: 0;              /* Remove default margins */
+  padding: 0;             /* Remove default padding */
+}
+html {
+  scroll-behavior: smooth; /* Smooth scrolling when navigating to anchors */
+}
+body {
+  font-family: var(--font);    /* Use the font defined in :root */
+  background: var(--bg);       /* Dark background color */
+  color: var(--text);          /* Default text color */
+  min-height: 100vh;           /* At least full screen height */
+  overflow-x: hidden;          /* Prevent horizontal scrollbar */
+  line-height: 1.6;            /* EDIT: Space between lines of text */
+}
+img { max-width: 100%; } /* Images never overflow their container */
+button { cursor: pointer; font-family: inherit; border: none; outline: none; }
+/* All buttons: pointer cursor, inherit font */
+input, textarea, select { font-family: inherit; outline: none; border: none; background: transparent; color: var(--text); }
+/* Form elements: inherit styles from parent */
+a { color: inherit; text-decoration: none; } /* Links match text color, no underline */
+
+
+/* =============================================
+   UTILITY CLASSES
+   Use these class names directly in HTML
+   ============================================= */
+.container {
+  max-width: 1200px; /* EDIT: Maximum page width */
+  margin: 0 auto;    /* Centers the container horizontally */
+  padding: 0 20px;   /* EDIT: Left/right padding on small screens */
+}
+.hidden { display: none !important; } /* Completely hides an element */
+.w-full { width: 100%; }              /* Makes element full width */
+
+/* Gradient text effect (used in hero headline) */
+.gradient-text {
+  background: linear-gradient(135deg, var(--primary) 0%, #ff9d6c 60%, var(--yellow) 100%);
+  /* EDIT: Change gradient colors here */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Centered empty-state message */
+.empty-msg {
+  color: var(--text-muted);
+  text-align: center;
+  padding: 40px 20px;   /* EDIT: Space around empty messages */
+  font-size: 0.95rem;   /* EDIT: Font size of empty messages */
+}
+
+/* Custom scrollbar styling */
+::-webkit-scrollbar { width: 6px; }                         /* EDIT: Scrollbar width */
+::-webkit-scrollbar-track { background: var(--bg2); }       /* Scrollbar track color */
+::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 99px; } /* Scrollbar handle */
+
+
+/* =============================================
+   HEADER (top navigation bar)
+   ============================================= */
+.header {
+  position: sticky;              /* Sticks to top while scrolling */
+  top: 0;
+  z-index: 100;                  /* Sits above other elements */
+  background: rgba(13,15,20,0.85); /* Semi-transparent dark background */
+  backdrop-filter: blur(20px);     /* Frosted glass blur effect */
+  -webkit-backdrop-filter: blur(20px); /* Safari support */
+  border-bottom: 1px solid var(--border); /* Bottom border line */
+}
+.header-inner {
+  display: flex;             /* Side-by-side layout */
+  align-items: center;       /* Vertically centered */
+  justify-content: space-between; /* Pushes items to edges */
+  gap: 16px;                 /* EDIT: Gap between logo, nav, and buttons */
+  height: 70px;              /* EDIT: Height of the header bar */
+}
+
+/* Logo container */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* EDIT: Space between emoji and text */
+}
+.logo-icon  { font-size: 2rem; }     /* EDIT: Size of logo emoji */
+.logo-name  {
+  display: block;
+  font-family: var(--font2);
+  font-size: 1.3rem;       /* EDIT: Canteen name font size */
+  font-weight: 800;
+  color: var(--text);
+}
+.logo-tag {
+  display: block;
+  font-size: 0.7rem;        /* EDIT: Tagline font size */
+  color: var(--primary);    /* EDIT: Tagline color */
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Navigation tab buttons */
+.nav-tabs {
+  display: flex;
+  gap: 6px; /* EDIT: Space between tabs */
+}
+.nav-tab {
+  padding: 8px 18px;        /* EDIT: Tab button padding */
+  border-radius: 99px;      /* Pill shape */
+  font-size: 0.88rem;       /* EDIT: Tab text size */
+  font-weight: 600;
+  color: var(--text-muted); /* Default (inactive) tab color */
+  background: transparent;
+  transition: var(--transition);
+}
+.nav-tab:hover {
+  color: var(--text);
+  background: var(--surface); /* Slight background on hover */
+}
+.nav-tab.active {
+  color: var(--primary);         /* EDIT: Active tab text color */
+  background: var(--primary-glow); /* Active tab background glow */
+}
+
+/* Header right section */
+.header-right { display: flex; align-items: center; gap: 12px; }
+
+/* Cart button */
+.cart-btn {
+  position: relative;           /* Needed for badge positioning */
+  background: var(--surface);
+  border-radius: 12px;          /* EDIT: Cart button corner roundness */
+  padding: 10px 14px;           /* EDIT: Cart button size */
+  font-size: 1.2rem;            /* EDIT: Cart emoji size */
+  transition: var(--transition);
+  border: 1px solid var(--border);
+}
+.cart-btn:hover { background: var(--surface2); border-color: var(--primary); }
+
+/* Red item count badge on cart */
+.cart-badge {
+  position: absolute;
+  top: -6px; right: -6px;    /* Position at top-right of cart button */
+  background: var(--primary); /* EDIT: Badge background color */
+  color: #fff;
+  font-size: 0.7rem;          /* EDIT: Badge number font size */
+  font-weight: 700;
+  border-radius: 99px;
+  min-width: 20px; height: 20px;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 5px;
+  transition: transform 0.2s cubic-bezier(.34,1.56,.64,1); /* Bounce animation */
+}
+.cart-badge.bump { transform: scale(1.4); } /* Scale up briefly when item added */
+
+/* Outline (bordered) button style */
+.btn-outline {
+  background: transparent;
+  border: 1.5px solid var(--border);
+  color: var(--text);
+  border-radius: 99px;        /* Pill shape */
+  padding: 8px 20px;          /* EDIT: Button padding */
+  font-weight: 600;
+  transition: var(--transition);
+}
+.btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+.btn-sm { font-size: 0.85rem; padding: 7px 16px; } /* Small size modifier */
+
+
+/* =============================================
+   MAIN PAGE LAYOUT
+   ============================================= */
+.main {
+  padding: 32px 20px 80px; /* EDIT: Top/bottom space around page content */
+}
+
+/* All pages are hidden by default */
+.page { display: none; }
+/* Only the page with "active" class is visible */
+.page.active { display: block; }
+
+
+/* ── HERO SECTION (big banner at top of menu page) ── */
+.hero {
+  display: grid;
+  grid-template-columns: 1fr auto; /* Text on left, token visual on right */
+  align-items: center;
+  gap: 32px;
+  background: linear-gradient(135deg, var(--bg3) 0%, #16192b 100%);
+  /* EDIT: Change hero background gradient colors */
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg); /* Rounded corners */
+  padding: 48px 40px;              /* EDIT: Hero inner spacing */
+  margin-bottom: 36px;             /* EDIT: Space below hero */
+  position: relative;
+  overflow: hidden;
+}
+/* Decorative glow in hero background */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 80% at 110% 50%, rgba(255,107,53,0.12) 0%, transparent 70%);
+  /* EDIT: Change the color rgba(255,107,53,...) to your brand color */
+  pointer-events: none; /* Doesn't block clicks */
+}
+
+/* Hero headline */
+.hero-title {
+  font-family: var(--font2);
+  font-size: clamp(2rem, 4vw, 3rem); /* EDIT: Min, preferred, max font size (responsive) */
+  font-weight: 900;
+  line-height: 1.15;
+  margin-bottom: 16px;               /* EDIT: Space below headline */
+}
+/* Hero sub-text */
+.hero-sub {
+  color: var(--text-muted);
+  font-size: 1.05rem; /* EDIT: Description text size */
+  max-width: 480px;   /* EDIT: Maximum width of description */
+}
+
+/* Token demo visual in hero */
+.token-demo { text-align: center; }
+.token-label {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+}
+.token-circle {
+  width: 120px; height: 120px;  /* EDIT: Size of the token circle */
+  border-radius: 50%;            /* Perfect circle */
+  background: conic-gradient(var(--primary) 0%, var(--primary-dark) 100%);
+  /* EDIT: Change gradient to change circle colors */
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  box-shadow: var(--shadow-primary);
+  animation: tokenPulse 2.5s ease-in-out infinite; /* Pulsing glow animation */
+}
+.token-num  { font-family: var(--font2); font-size: 2rem; font-weight: 900; color: #fff; line-height: 1; }
+.token-ready { font-size: 0.72rem; color: rgba(255,255,255,0.85); font-weight: 600; margin-top: 2px; }
+
+/* Token pulse animation keyframes */
+@keyframes tokenPulse {
+  0%, 100% { box-shadow: 0 0 0 0 var(--primary-glow), var(--shadow-primary); }
+  50%       { box-shadow: 0 0 0 16px rgba(255,107,53,0), var(--shadow-primary); }
+  /* EDIT: Change 16px to increase/decrease pulse size */
+}
+
+
+/* ── SEARCH BAR ── */
+.search-bar-wrap { margin-bottom: 20px; } /* EDIT: Space below search bar */
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 99px;    /* Pill shape */
+  padding: 12px 20px;     /* EDIT: Search bar inner spacing */
+  transition: var(--transition);
+}
+.search-bar:focus-within {
+  border-color: var(--primary); /* EDIT: Border color when typing */
+  background: var(--surface2);
+}
+.search-icon { font-size: 1.1rem; } /* Search emoji size */
+.search-bar input {
+  flex: 1;               /* Takes all remaining width */
+  font-size: 0.95rem;    /* EDIT: Search input text size */
+  color: var(--text);
+}
+.search-bar input::placeholder { color: var(--text-dim); } /* Placeholder text color */
+
+
+/* ── CATEGORY FILTER PILLS ── */
+.category-pills {
+  display: flex;
+  flex-wrap: wrap;       /* Wrap to next line on small screens */
+  gap: 10px;             /* EDIT: Space between category pills */
+  margin-bottom: 28px;   /* EDIT: Space below pills */
+}
+.cat-pill {
+  padding: 8px 20px;          /* EDIT: Pill button size */
+  border-radius: 99px;        /* Pill shape */
+  font-size: 0.85rem;         /* EDIT: Category text size */
+  font-weight: 600;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  color: var(--text-muted);
+  transition: var(--transition);
+}
+.cat-pill:hover  { color: var(--text); border-color: var(--primary); }
+.cat-pill.active {
+  background: var(--primary-glow); /* EDIT: Active category background */
+  color: var(--primary);           /* EDIT: Active category text color */
+  border-color: var(--primary);
+}
+
+
+/* ── MENU ITEMS GRID ── */
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  /* EDIT: Change 260px to make cards wider or narrower */
+  gap: 20px; /* EDIT: Space between cards */
+}
+
+/* Individual menu item card */
+.menu-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  overflow: hidden;       /* Children don't overflow rounded corners */
+  transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+  position: relative;
+}
+.menu-card:hover {
+  transform: translateY(-4px);                       /* EDIT: Lift amount on hover */
+  box-shadow: var(--shadow);
+  border-color: rgba(255,107,53,0.25);
+}
+.menu-card.unavailable {
+  opacity: 0.5;           /* EDIT: How faded unavailable items appear */
+  pointer-events: none;   /* Disables all clicks on unavailable items */
+}
+
+/* Food photo area at top of card (replaces old emoji area) */
+.card-img-wrap {
+  height: 160px;           /* EDIT: Height of food photo on card */
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  background: var(--bg3); /* Background shown while image loads */
+}
+/* The actual food photo */
+.card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;       /* Fills the area without stretching */
+  display: block;
+  transition: transform 0.4s ease; /* Zoom on hover */
+}
+.menu-card:hover .card-img {
+  transform: scale(1.07); /* EDIT: Zoom amount when card is hovered */
+}
+/* Fallback shown if image URL fails to load */
+.card-img-fallback {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 3.5rem;
+  background: var(--bg3);
+}
+/* "View Details" overlay text on hover (same as before) */
+.card-img-wrap::after {
+  content: 'View Details';
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.55);  /* EDIT: Overlay darkness */
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
+  font-size: 0.85rem; font-weight: 700; letter-spacing: 0.05em;
+  opacity: 0;                    /* Hidden by default */
+  transition: opacity var(--transition);
+}
+.menu-card:hover .card-img-wrap::after { opacity: 1; } /* Show on card hover */
+
+/* Veg / Non-veg indicator dot in card corner */
+.veg-badge {
+  position: absolute;
+  top: 10px; right: 10px;   /* EDIT: Badge position on card */
+  width: 20px; height: 20px;
+  border-radius: 4px;
+  border: 2px solid;
+  display: flex; align-items: center; justify-content: center;
+}
+.veg-badge.veg    { border-color: var(--green); } /* Green border for veg */
+.veg-badge.veg::before    { content: ''; width: 9px; height: 9px; border-radius: 50%; background: var(--green); }
+.veg-badge.nonveg { border-color: var(--red); }   /* Red border for non-veg */
+.veg-badge.nonveg::before { content: ''; width: 9px; height: 9px; border-radius: 50%; background: var(--red); }
+
+/* Card text content */
+.card-body    { padding: 16px; }            /* EDIT: Inner spacing of card text */
+.card-category {
+  font-size: 0.72rem;        /* EDIT: Category label size */
+  color: var(--primary);     /* EDIT: Category label color */
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  margin-bottom: 4px;
+}
+.card-name { font-weight: 700; font-size: 1rem; margin-bottom: 4px; } /* Item name */
+.card-desc {
+  font-size: 0.82rem;        /* EDIT: Description font size */
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  white-space: nowrap;       /* Single line */
+  overflow: hidden;
+  text-overflow: ellipsis;   /* Shows "..." if description is too long */
+}
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Price on left, button on right */
+}
+.card-price {
+  font-family: var(--font2);
+  font-size: 1.15rem;  /* EDIT: Price text size */
+  font-weight: 800;
+  color: var(--primary); /* EDIT: Price color */
+}
+.card-price span { font-size: 0.8rem; font-weight: 500; color: var(--text-muted); }
+
+/* "+ Add" button on card */
+.add-btn {
+  background: var(--primary);   /* EDIT: Add button color */
+  color: #fff;
+  border-radius: 99px;
+  font-size: 0.85rem;            /* EDIT: Add button text size */
+  font-weight: 700;
+  padding: 8px 18px;             /* EDIT: Add button padding */
+  transition: background var(--transition), transform 0.15s;
+}
+.add-btn:hover  { background: var(--primary-dark); transform: scale(1.04); }
+.add-btn:active { transform: scale(0.96); } /* Press effect */
+
+/* Quantity control (shown after item is added) */
+.qty-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface2);
+  border-radius: 99px;
+  padding: 4px 8px;
+}
+.qty-btn {
+  width: 28px; height: 28px;   /* EDIT: Size of + / − buttons */
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  transition: background var(--transition);
+}
+.qty-btn:hover { background: var(--primary-dark); }
+.qty-num {
+  font-weight: 700;
+  font-size: 0.95rem;
+  min-width: 20px;
+  text-align: center;
+}
+
+/* "Not Available" tag overlaid on card */
+.unavail-tag {
+  position: absolute;
+  top: 12px; left: 12px;
+  background: var(--red-bg);
+  color: var(--red);
+  font-size: 0.72rem; font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 99px;
+  border: 1px solid var(--red);
+}
+
+
+/* =============================================
+   CART SIDEBAR
+   ============================================= */
+
+/* Dark overlay behind sidebar */
+.overlay {
+  position: fixed; inset: 0;       /* Covers entire screen */
+  background: rgba(0,0,0,0.6);     /* EDIT: Overlay darkness */
+  z-index: 200;
+  opacity: 0;                       /* Hidden by default */
+  pointer-events: none;
+  transition: opacity 0.3s;
+  backdrop-filter: blur(4px);       /* EDIT: Blur amount behind overlay */
+}
+.overlay.show { opacity: 1; pointer-events: all; } /* Show when cart/modal is open */
+
+/* Cart sidebar panel */
+.cart-sidebar {
+  position: fixed;
+  top: 0; right: 0; bottom: 0;          /* Sticks to right edge */
+  width: min(420px, 100vw);             /* EDIT: Cart width (420px max, 100% on mobile) */
+  background: var(--bg2);
+  border-left: 1px solid var(--border);
+  z-index: 300;                          /* Above overlay (200) */
+  display: flex; flex-direction: column;
+  transform: translateX(100%);           /* Start off-screen to the right */
+  transition: transform 0.32s cubic-bezier(0.4,0,0.2,1); /* Slide-in animation */
+  box-shadow: -8px 0 40px rgba(0,0,0,0.5); /* Shadow on left edge */
+}
+.cart-sidebar.open { transform: translateX(0); } /* Slide in */
+
+/* Cart header */
+.cart-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 24px;                    /* EDIT: Cart header spacing */
+  border-bottom: 1px solid var(--border);
+}
+.cart-header h2 { font-family: var(--font2); font-size: 1.3rem; font-weight: 800; }
+
+/* Cart close button */
+.close-cart {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: 1rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: var(--transition);
+}
+.close-cart:hover { background: var(--surface2); color: var(--text); }
+
+/* Scrollable list of cart items */
+.cart-items {
+  flex: 1;               /* Takes all available height */
+  overflow-y: auto;      /* Scroll if many items */
+  padding: 16px;
+}
+
+/* Single cart item row */
+.cart-item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px;
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  margin-bottom: 10px;
+  border: 1px solid var(--border);
+  animation: slideIn 0.2s ease; /* Slides in when added */
+}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: none; }
+}
+/* Thumbnail image in cart sidebar */
+.cart-item-thumb {
+  width: 56px; height: 56px;   /* EDIT: Cart thumbnail size */
+  border-radius: 10px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--bg3);      /* Shown while image loads */
+}
+.cart-item-thumb img {
+  width: 100%; height: 100%;
+  object-fit: cover;           /* Fill without stretching */
+}
+.cart-item-info    { flex: 1; }
+.cart-item-name    { font-weight: 600; font-size: 0.92rem; }
+.cart-item-price   { font-size: 0.82rem; color: var(--primary); font-weight: 600; margin-top: 2px; }
+.cart-item-remove {
+  background: var(--red-bg);
+  color: var(--red);
+  border-radius: 8px;
+  width: 30px; height: 30px;
+  display: flex; align-items: center; justify-content: center;
+  transition: var(--transition);
+}
+.cart-item-remove:hover { background: var(--red); color: #fff; }
+
+/* Cart footer (total + place order) */
+.cart-footer { padding: 16px 24px 24px; border-top: 1px solid var(--border); }
+.cart-total {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 16px;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+#cartTotal {
+  color: var(--primary);     /* EDIT: Total price color */
+  font-family: var(--font2);
+  font-size: 1.3rem;
+}
+
+/* Special instructions textarea */
+.special-note-wrap { margin-bottom: 16px; }
+.special-note-wrap label { font-size: 0.82rem; color: var(--text-muted); display: block; margin-bottom: 6px; }
+.special-note-wrap textarea {
+  width: 100%;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 0.88rem;
+  color: var(--text);
+  resize: none;
+  transition: border-color var(--transition);
+}
+.special-note-wrap textarea:focus { border-color: var(--primary); }
+
+/* Primary (filled orange) button */
+.btn-primary {
+  display: block;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  /* EDIT: Change gradient to change button color */
+  color: #fff;
+  font-size: 1rem;         /* EDIT: Button text size */
+  font-weight: 700;
+  padding: 14px 28px;      /* EDIT: Button size */
+  border-radius: 99px;     /* Pill shape */
+  text-align: center;
+  transition: transform 0.15s, box-shadow var(--transition);
+  box-shadow: 0 4px 20px rgba(255,107,53,0.35); /* EDIT: Button glow color */
+}
+.btn-primary:hover  { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(255,107,53,0.45); }
+.btn-primary:active { transform: translateY(0); }
+
+
+/* =============================================
+   MY ORDERS PAGE
+   ============================================= */
+.section-title {
+  font-family: var(--font2);
+  font-size: 1.6rem;   /* EDIT: Page title size */
+  font-weight: 800;
+  margin-bottom: 24px;
+}
+.sub-title { font-size: 1.1rem; font-weight: 700; margin: 24px 0 16px; }
+
+/* Order history card */
+.order-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 24px;               /* EDIT: Card inner spacing */
+  margin-bottom: 16px;
+  transition: border-color var(--transition);
+}
+.order-card:hover { border-color: rgba(255,107,53,0.3); }
+
+.order-card-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 16px;
+}
+.order-meta { display: flex; flex-direction: column; gap: 2px; }
+.order-id   { font-size: 0.78rem; color: var(--text-muted); }
+.order-date { font-size: 0.82rem; color: var(--text-dim); }
+
+/* Token display inside order card */
+.order-token {
+  background: var(--surface2);
+  border-radius: var(--radius-sm);
+  padding: 8px 16px;
+  text-align: center;
+}
+.order-token-label { font-size: 0.7rem; color: var(--text-muted); }
+.order-token-num   { font-family: var(--font2); font-size: 1.4rem; font-weight: 900; color: var(--primary); }
+
+/* List of items in order */
+.order-items-list { margin-bottom: 16px; }
+.order-item-row {
+  display: flex; justify-content: space-between;
+  font-size: 0.88rem; color: var(--text-muted);
+  padding: 4px 0;
+  border-bottom: 1px solid var(--border);
+}
+.order-item-row:last-child { border: none; }
+.order-item-row strong { color: var(--text); }
+
+.order-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 12px;
+}
+.order-total-label { font-size: 0.82rem; color: var(--text-muted); }
+.order-total-amt   { font-family: var(--font2); font-size: 1.1rem; font-weight: 700; color: var(--primary); }
+
+/* Status badge (Pending, Preparing, Ready, Completed) */
+.status-badge {
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 5px 14px;
+  border-radius: 99px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+/* EDIT: Change colors for each status below */
+.status-pending   { background: var(--yellow-bg); color: var(--yellow); border: 1px solid rgba(245,200,66,0.3); }
+.status-preparing { background: rgba(91,156,246,0.12); color: var(--blue); border: 1px solid rgba(91,156,246,0.3); }
+.status-ready     { background: var(--green-bg); color: var(--green); border: 1px solid rgba(62,207,142,0.3); animation: readyPulse 1.5s ease-in-out infinite; }
+.status-completed { background: var(--surface2); color: var(--text-muted); border: 1px solid var(--border); }
+
+/* Pulsing glow for "Ready" status */
+@keyframes readyPulse {
+  0%,100% { box-shadow: none; }
+  50%      { box-shadow: 0 0 12px rgba(62,207,142,0.4); } /* EDIT: Glow color */
+}
+
+/* Order progress timeline (Pending → Preparing → Ready → Completed) */
+.order-timeline {
+  display: flex; align-items: center;
+  margin-top: 16px;
+}
+.tl-step {
+  flex: 1;
+  display: flex; flex-direction: column; align-items: center;
+  gap: 6px;
+  position: relative;
+}
+/* Horizontal line between steps */
+.tl-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 50%; top: 14px;
+  width: 100%; height: 2px;
+  background: var(--border); /* Default: gray line */
+  z-index: 0;
+}
+.tl-step.done:not(:last-child)::after { background: var(--primary); } /* Completed: orange line */
+
+/* Circular step indicator */
+.tl-dot {
+  width: 28px; height: 28px;    /* EDIT: Timeline dot size */
+  border-radius: 50%;
+  background: var(--surface2);
+  border: 2px solid var(--border);
+  z-index: 1;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem;
+  transition: var(--transition);
+}
+.tl-step.done .tl-dot    { background: var(--primary); border-color: var(--primary); color: #fff; }
+.tl-step.current .tl-dot { border-color: var(--primary); box-shadow: 0 0 0 4px var(--primary-glow); animation: tldotPulse 1.5s infinite; }
+@keyframes tldotPulse { 0%,100%{box-shadow:0 0 0 4px var(--primary-glow);} 50%{box-shadow:0 0 0 8px rgba(255,107,53,0);} }
+
+.tl-label { font-size: 0.68rem; color: var(--text-muted); text-align: center; white-space: nowrap; }
+.tl-step.done .tl-label { color: var(--primary); }
+
+
+/* =============================================
+   ADMIN PAGE
+   ============================================= */
+
+/* Stats grid (total orders, revenue etc.) */
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); /* Responsive columns */
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.stat-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 20px;            /* EDIT: Stat card spacing */
+  text-align: center;
+}
+.stat-num   { font-family: var(--font2); font-size: 2rem; font-weight: 900; color: var(--primary); }
+.stat-label { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+
+/* Admin order queue card */
+.admin-order-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 20px;
+  margin-bottom: 14px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap;
+}
+.admin-order-info    { flex: 1; }
+.admin-order-user    { font-weight: 700; margin-bottom: 4px; }
+.admin-order-items   { font-size: 0.85rem; color: var(--text-muted); }
+
+/* Admin action buttons (Prepare / Ready / Done) */
+.admin-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.admin-btn {
+  font-size: 0.8rem; font-weight: 700;
+  padding: 7px 14px; border-radius: 99px;
+  transition: var(--transition);
+}
+/* EDIT: Change colors for each admin action button */
+.admin-btn.prepare { background: rgba(91,156,246,0.15); color: var(--blue);  border: 1px solid rgba(91,156,246,0.4); }
+.admin-btn.prepare:hover { background: var(--blue); color: #fff; }
+.admin-btn.ready   { background: var(--green-bg);          color: var(--green); border: 1px solid rgba(62,207,142,0.4); }
+.admin-btn.ready:hover   { background: var(--green); color: #fff; }
+.admin-btn.complete { background: var(--surface2); color: var(--text-muted); border: 1px solid var(--border); }
+.admin-btn.complete:hover { background: var(--surface2); color: var(--text); }
+
+
+/* =============================================
+   MODALS (popup dialogs)
+   ============================================= */
+
+/* Modal backdrop */
+.modal {
+  position: fixed; inset: 0;  /* Covers entire screen */
+  z-index: 500;                /* Above everything else */
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  background: rgba(0,0,0,0.7); /* EDIT: Modal backdrop darkness */
+  backdrop-filter: blur(6px);   /* EDIT: Background blur amount */
+  opacity: 0;                   /* Hidden by default */
+  pointer-events: none;
+  transition: opacity 0.25s;
+}
+.modal.open { opacity: 1; pointer-events: all; } /* Show modal */
+
+/* Modal content box */
+.modal-box {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 36px;            /* EDIT: Modal inner spacing */
+  width: 100%;
+  max-width: 440px;         /* EDIT: Maximum modal width */
+  position: relative;
+  transform: translateY(20px) scale(0.97); /* Start slightly below */
+  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); /* Bounce-in animation */
+  box-shadow: 0 24px 80px rgba(0,0,0,0.6); /* EDIT: Modal shadow */
+}
+.modal.open .modal-box { transform: none; } /* Animate to normal position */
+
+/* Modal close × button */
+.modal-close {
+  position: absolute;
+  top: 16px; right: 16px;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--text-muted);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem;
+  transition: var(--transition);
+}
+.modal-close:hover { background: var(--red-bg); color: var(--red); }
+
+.modal-title { font-family: var(--font2); font-size: 1.5rem; font-weight: 800; margin-bottom: 20px; }
+
+/* Login/Register tab toggle */
+.tab-toggle {
+  display: flex;
+  background: var(--surface);
+  border-radius: 99px;
+  padding: 4px;
+  margin-bottom: 24px;
+}
+.tog {
+  flex: 1;
+  padding: 9px;
+  border-radius: 99px;
+  font-size: 0.88rem; font-weight: 600;
+  color: var(--text-muted);
+  transition: var(--transition);
+}
+.tog.active { background: var(--primary); color: #fff; } /* EDIT: Active tab color */
+
+/* Form field group */
+.form-group { margin-bottom: 16px; } /* EDIT: Space between form fields */
+.form-group label { font-size: 0.82rem; color: var(--text-muted); display: block; margin-bottom: 6px; font-weight: 600; }
+.form-group input, .form-group select {
+  width: 100%;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 11px 16px;       /* EDIT: Input field padding */
+  font-size: 0.95rem;
+  color: var(--text);
+  transition: border-color var(--transition);
+}
+.form-group input:focus, .form-group select:focus { border-color: var(--primary); }
+.form-group select option { background: var(--bg2); }
+.form-error { color: var(--red); font-size: 0.82rem; margin-bottom: 12px; min-height: 18px; }
+
+/* Order confirmed modal */
+.confirm-box { text-align: center; }
+.confirm-anim {
+  font-size: 3.5rem;   /* EDIT: Celebration emoji size */
+  margin-bottom: 16px;
+  display: inline-block;
+  animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1); /* Pop-in animation */
+}
+@keyframes popIn { from{transform:scale(0) rotate(-30deg);} to{transform:scale(1) rotate(0);} }
+.confirm-box h2    { font-family: var(--font2); font-size: 1.8rem; font-weight: 900; margin-bottom: 8px; }
+.confirm-box p     { color: var(--text-muted); margin-bottom: 8px; }
+
+/* Large token number shown on success */
+.big-token {
+  font-family: var(--font2);
+  font-size: 4rem;      /* EDIT: Token number size */
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--primary), var(--yellow));
+  /* EDIT: Token number gradient colors */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 8px 0 16px;
+}
+.confirm-sub { font-size: 0.88rem; margin-bottom: 24px; color: var(--text-muted); }
+
+/* Item detail modal */
+.item-modal-box { max-width: 520px; } /* EDIT: Item detail modal max width */
+/* Item detail photo (replaces old emoji display) */
+.item-modal-img-wrap {
+  width: 100%;
+  height: 220px;         /* EDIT: Height of food photo in detail modal */
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 20px;
+  background: var(--bg3);
+}
+.item-modal-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;     /* Fill area without distortion */
+  display: block;
+}
+.item-modal-name  { font-family: var(--font2); font-size: 1.6rem; font-weight: 900; margin-bottom: 8px; }
+.item-modal-desc  { color: var(--text-muted); margin-bottom: 16px; line-height: 1.7; }
+.item-modal-price { font-family: var(--font2); font-size: 1.8rem; font-weight: 900; color: var(--primary); margin-bottom: 8px; }
+
+
+/* =============================================
+   PAYMENT MODAL
+   ============================================= */
+.pay-modal-box { max-width: 480px; } /* EDIT: Payment modal max width */
+
+/* Order total row at top of payment modal */
+.pay-total-row {
+  display: flex; justify-content: space-between; align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px 18px;
+  margin-bottom: 20px;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.pay-total-amt {
+  font-family: var(--font2);
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: var(--primary); /* EDIT: Total amount color */
+}
+
+/* Payment method tab buttons (Cash / UPI / Card) */
+.pay-tabs {
+  display: flex;
+  background: var(--surface);
+  border-radius: 99px;
+  padding: 4px;
+  margin-bottom: 20px;
+  gap: 4px;
+}
+.pay-tab {
+  flex: 1;
+  padding: 9px;
+  border-radius: 99px;
+  font-size: 0.85rem; font-weight: 700;
+  color: var(--text-muted);
+  transition: var(--transition);
+  text-align: center;
+}
+.pay-tab:hover  { color: var(--text); }
+.pay-tab.active { background: var(--primary); color: #fff; } /* EDIT: Active tab color */
+
+/* Individual payment method panel (content changes per tab) */
+.pay-panel { margin-bottom: 20px; }
+
+/* Info box for Cash and UPI panels */
+.pay-info-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  text-align: center;
+}
+.pay-icon       { font-size: 3rem; margin-bottom: 12px; }        /* EDIT: Payment icon size */
+.pay-info-title { font-family: var(--font2); font-size: 1.1rem; font-weight: 800; margin-bottom: 8px; }
+.pay-info-sub   { font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; }
+
+/* UPI ID display */
+.upi-id-display {
+  font-family: var(--font2);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--primary);   /* EDIT: UPI ID text color */
+  background: var(--primary-glow);
+  border-radius: 8px;
+  padding: 8px 16px;
+  display: inline-block;
+  margin: 8px 0;
+  word-break: break-all;
+}
+
+/* Payment method shown on the order confirmation modal */
+.confirm-pay-method {
+  display: inline-block;
+  background: var(--green-bg);
+  color: var(--green);         /* EDIT: Payment confirmation badge color */
+  border: 1px solid rgba(62,207,142,0.3);
+  border-radius: 99px;
+  padding: 6px 16px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+/* Tags in item detail modal (Veg, Category, Time) */
+.item-modal-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+.item-tag        { font-size: 0.78rem; font-weight: 600; padding: 4px 12px; border-radius: 99px; }
+.tag-veg    { background: var(--green-bg); color: var(--green); }   /* EDIT: Veg tag colors */
+.tag-nonveg { background: var(--red-bg);   color: var(--red); }     /* EDIT: Non-veg tag colors */
+.tag-cat    { background: var(--surface2); color: var(--text-muted); } /* Category tag */
+.tag-time   { background: var(--yellow-bg); color: var(--yellow); }    /* Prep time tag */
+
+
+/* =============================================
+   RESPONSIVE — Mobile/Tablet adjustments
+   ============================================= */
+
+/* Tablet (screen up to 768px wide) */
+@media (max-width: 768px) {
+  .hero {
+    grid-template-columns: 1fr; /* Stack hero content vertically */
+    text-align: center;
+    padding: 32px 20px;        /* EDIT: Reduced padding on tablet */
+  }
+  .hero-visual { display: none; } /* Hide token demo on small screens */
+  .header-inner { gap: 8px; }
+  .nav-tabs { display: none; }    /* Hide nav tabs on mobile (can add hamburger menu here) */
+  .menu-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+  /* EDIT: 220px = minimum card width on tablet */
+}
+
+/* Mobile (screen up to 480px wide) */
+@media (max-width: 480px) {
+  .menu-grid { grid-template-columns: 1fr; } /* Single column on mobile */
+  .modal-box { padding: 24px; }              /* EDIT: Reduced modal padding on mobile */
+}

@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QuickBite – Login & Registration</title>
+  
+  <!-- Google Fonts: loads Inter and Outfit fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  
+  <!-- Connect main style.css to inherit variables & style tokens -->
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    /* ── AUTH-SPECIFIC PREMIUM STYLING ── */
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: radial-gradient(circle at 10% 20%, #16192b 0%, var(--bg) 90%);
+      margin: 0;
+      padding: 20px;
+    }
+
+    /* Outer wrapper containing the split-screen */
+    .auth-container {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      width: 100%;
+      max-width: 1000px;
+      min-height: 600px;
+      background: rgba(19, 22, 30, 0.4);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+      animation: fadeInAuth 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes fadeInAuth {
+      from { opacity: 0; transform: translateY(20px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* ── LEFT PANEL: BRANDING/ILLUSTRATION ── */
+    .brand-side {
+      position: relative;
+      background: linear-gradient(135deg, #181c2d 0%, #0c0e18 100%);
+      padding: 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      border-right: 1px solid var(--border);
+    }
+
+    /* Glowing decorative backgrounds */
+    .brand-side::before {
+      content: '';
+      position: absolute;
+      top: -30%;
+      right: -30%;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 107, 53, 0.18) 0%, transparent 70%);
+      filter: blur(30px);
+      pointer-events: none;
+    }
+
+    .brand-side::after {
+      content: '';
+      position: absolute;
+      bottom: -20%;
+      left: -20%;
+      width: 250px;
+      height: 250px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(245, 200, 66, 0.1) 0%, transparent 70%);
+      filter: blur(30px);
+      pointer-events: none;
+    }
+
+    .brand-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 2;
+    }
+
+    .brand-logo-icon {
+      font-size: 2.2rem;
+    }
+
+    .brand-title {
+      font-family: var(--font2);
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .brand-tag {
+      font-size: 0.72rem;
+      color: var(--primary);
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+
+    /* Dynamic interactive mock graphics inside the branding side */
+    .brand-showcase {
+      margin: 40px auto;
+      z-index: 2;
+      position: relative;
+      width: 100%;
+      max-width: 320px;
+      perspective: 1000px;
+    }
+
+    .floating-card {
+      background: rgba(30, 34, 49, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+      transform: rotateY(-10deg) rotateX(10deg);
+      transition: transform 0.5s ease;
+      animation: floatMotion 6s ease-in-out infinite;
+      backdrop-filter: blur(10px);
+    }
+
+    .floating-card:hover {
+      transform: rotateY(0deg) rotateX(0deg) scale(1.02);
+    }
+
+    @keyframes floatMotion {
+      0%, 100% { transform: rotateY(-10deg) rotateX(10deg) translateY(0); }
+      50% { transform: rotateY(-6deg) rotateX(6deg) translateY(-12px); }
+    }
+
+    .card-stat {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 12px;
+    }
+
+    .card-stat-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .status-pill {
+      font-size: 0.7rem;
+      font-weight: 800;
+      background: var(--green-bg);
+      color: var(--green);
+      padding: 4px 10px;
+      border-radius: 99px;
+      border: 1px solid rgba(62, 207, 142, 0.3);
+    }
+
+    .card-main-info {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .card-token {
+      font-family: var(--font2);
+      font-size: 2.8rem;
+      font-weight: 900;
+      color: var(--primary);
+      text-shadow: 0 4px 12px var(--primary-glow);
+      margin: 4px 0;
+    }
+
+    .card-tip {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .feature-points {
+      list-style: none;
+      padding: 0;
+      margin-top: 15px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .feature-points li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .feature-points li::before {
+      content: '✓';
+      color: var(--green);
+      font-weight: bold;
+    }
+
+    .brand-footer {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      z-index: 2;
+    }
+
+    /* ── RIGHT PANEL: FORMS ── */
+    .form-side {
+      background: #12141f;
+      padding: 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .form-header {
+      margin-bottom: 28px;
+    }
+
+    .form-title {
+      font-family: var(--font2);
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .form-subtitle {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      transition: color var(--transition);
+      cursor: pointer;
+    }
+
+    .back-btn:hover {
+      color: var(--primary);
+    }
+
+    /* Tabs toggle for login vs register */
+    .auth-tabs {
+      display: flex;
+      background: var(--bg3);
+      border-radius: 99px;
+      padding: 4px;
+      margin-bottom: 24px;
+      border: 1px solid var(--border);
+    }
+
+    .auth-tab {
+      flex: 1;
+      padding: 10px;
+      border-radius: 99px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: transparent;
+      transition: all var(--transition);
+      text-align: center;
+    }
+
+    .auth-tab.active {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 4px 12px var(--primary-glow);
+    }
+
+    /* Inputs visual focus glow styles */
+    .form-group input, .form-group select {
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(30, 34, 49, 0.5);
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 0.92rem;
+      transition: all var(--transition);
+    }
+
+    .form-group input:focus, .form-group select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+      background: var(--surface);
+    }
+
+    .form-group select option {
+      background: #1a1e2a;
+      color: var(--text);
+    }
+
+    .form-error {
+      color: var(--red);
+      font-size: 0.82rem;
+      margin-top: -6px;
+      margin-bottom: 12px;
+      min-height: 18px;
+      font-weight: 500;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 820px) {
+      .auth-container {
+        grid-template-columns: 1fr;
+        max-width: 480px;
+        min-height: auto;
+      }
+      .brand-side {
+        display: none;
+      }
+      .form-side {
+        padding: 32px 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── AUTHENTICATION MAIN BOX ── -->
+  <div class="auth-container">
+    
+    <!-- ── LEFT DECORATIVE SIDE ── -->
+    <div class="brand-side">
+      <div class="brand-header">
+        <span class="brand-logo-icon">🍽️</span>
+        <div>
+          <span class="brand-title">QuickBite</span>
+          <div class="brand-tag">Queue-Free Canteen</div>
+        </div>
+      </div>
+      
+      <!-- Visual status simulator demo -->
+      <div class="brand-showcase">
+        <div class="floating-card">
+          <div class="card-stat">
+            <span class="card-stat-label">Live Tracker</span>
+            <span class="status-pill">Ready for Pickup</span>
+          </div>
+          <div class="card-main-info">
+            <div class="card-tip">Your Order Token</div>
+            <div class="card-token">#24</div>
+            <div class="card-tip">Pick it up from Counter #1</div>
+          </div>
+          <ul class="feature-points">
+            <li>Zero queue waiting times</li>
+            <li>Order directly from your phone</li>
+            <li>Instant token updates</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="brand-footer">
+        &copy; 2026 QuickBite Canteen System. All rights reserved.
+      </div>
+    </div>
+    
+    <!-- ── RIGHT FORM SIDE ── -->
+    <div class="form-side">
+      
+      <!-- Back button -->
+      <div class="back-btn" onclick="goToMenu()">
+        ← Back to Menu
+      </div>
+      
+      <div class="form-header">
+        <h2 class="form-title" id="pageTitle">Welcome Back 👋</h2>
+        <p class="form-subtitle" id="pageSubtitle">Please enter your credentials to login.</p>
+      </div>
+      
+      <!-- Toggle Tabs -->
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tabLogin" onclick="setAuthMode('login')">Login</button>
+        <button class="auth-tab" id="tabRegister" onclick="setAuthMode('register')">Register</button>
+      </div>
+      
+      <!-- Auth Form -->
+      <form id="authForm" novalidate>
+        
+        <!-- Full Name: Only visible in Register mode -->
+        <div class="form-group" id="nameGroup" style="display: none;">
+          <label for="fullName">Full Name</label>
+          <input type="text" id="fullName" placeholder="Enter your full name" />
+        </div>
+        
+        <!-- Email field -->
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" placeholder="name@domain.com" required />
+        </div>
+        
+        <!-- Password field -->
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="••••••••" required />
+        </div>
+        
+        <!-- Error Message display -->
+        <div class="form-error" id="errorMessage"></div>
+        
+        <!-- Submit Button -->
+        <button type="submit" class="btn-primary w-full" id="submitBtn" style="margin-top: 8px;">
+          Login
+        </button>
+        
+      </form>
+      
+    </div>
+  </div>
+
+  <!-- Toast script helper and AJAX logic -->
+  <script>
+    // Global Authentication State
+    let isLoginMode = true;
+    function getApiUrl() {
+      const hostname = window.location.hostname;
+      const isLocal = window.location.protocol === 'file:' ||
+                      hostname === 'localhost' ||
+                      hostname === '127.0.0.1' ||
+                      hostname.startsWith('192.168.') ||
+                      hostname.startsWith('10.') ||
+                      /^172\.(1[6-9]|2[0-9]|3[0-1])\./.test(hostname);
+      
+      if (isLocal) {
+        if (window.location.protocol === 'file:') {
+          return 'http://localhost:5000/api';
+        }
+        return `${window.location.protocol}//${hostname}:5000/api`;
+      }
+      
+      // If deployed frontend and backend are on different domains, replace the return below:
+      return 'https://queue-free-canteen-ordering-system-production.up.railway.app/api';
+      // return window.location.origin + '/api';
+    }
+    const API_URL = getApiUrl();
+
+    // Session Helpers
+    function getActiveSession() {
+      return JSON.parse(localStorage.getItem('qb_user') || 'null');
+    }
+
+    function setActiveSession(user) {
+      localStorage.setItem('qb_user', JSON.stringify(user));
+    }
+
+    // Redirect to main menu helper
+    function goToMenu() {
+      window.location.href = 'index.html';
+    }
+
+    // Toast notification helper
+    function showNotification(msg) {
+      const existing = document.querySelector('.toast');
+      if (existing) existing.remove();
+
+      const t = document.createElement('div');
+      t.className = 'toast';
+      t.textContent = msg;
+      t.style.cssText = `
+        position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px);
+        background: var(--surface2); color: var(--text); border: 1px solid var(--border);
+        padding: 12px 24px; border-radius: 99px; font-size: 0.9rem; font-weight: 600;
+        z-index: 9999; box-shadow: var(--shadow); opacity: 0;
+        transition: opacity 0.3s, transform 0.3s; pointer-events: none;
+        backdrop-filter: blur(10px); white-space: nowrap;
+      `;
+      document.body.appendChild(t);
+
+      requestAnimationFrame(() => {
+        t.style.opacity = '1';
+        t.style.transform = 'translateX(-50%) translateY(0)';
+      });
+
+      setTimeout(() => {
+        t.style.opacity = '0';
+        t.style.transform = 'translateX(-50%) translateY(20px)';
+        setTimeout(() => t.remove(), 400);
+      }, 2500);
+    }
+
+    // Toggle between Login and Register Mode
+    function setAuthMode(mode) {
+      const tabLogin = document.getElementById('tabLogin');
+      const tabRegister = document.getElementById('tabRegister');
+      const nameGroup = document.getElementById('nameGroup');
+      const pageTitle = document.getElementById('pageTitle');
+      const pageSubtitle = document.getElementById('pageSubtitle');
+      const submitBtn = document.getElementById('submitBtn');
+      const errorMessage = document.getElementById('errorMessage');
+
+      errorMessage.textContent = ''; // clear errors
+
+      if (mode === 'login') {
+        isLoginMode = true;
+        tabLogin.classList.add('active');
+        tabRegister.classList.remove('active');
+        nameGroup.style.display = 'none';
+        pageTitle.textContent = 'Welcome Back 👋';
+        pageSubtitle.textContent = 'Please enter your credentials to login.';
+        submitBtn.textContent = 'Login';
+      } else {
+        isLoginMode = false;
+        tabLogin.classList.remove('active');
+        tabRegister.classList.add('active');
+        nameGroup.style.display = 'block';
+        pageTitle.textContent = 'Create Account 🚀';
+        pageSubtitle.textContent = 'Register to start ordering canteen food.';
+        submitBtn.textContent = 'Create Account';
+      }
+    }
+
+    // Handle Form Submit (doAuth via Node.js Backend API)
+    document.getElementById('authForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const email = document.getElementById('email').value.trim().toLowerCase();
+      const password = document.getElementById('password').value;
+      const errorDiv = document.getElementById('errorMessage');
+      
+      errorDiv.textContent = ''; // clear error
+
+      // Validation
+      if (!email || !password) {
+        errorDiv.textContent = 'Email and password are required.';
+        return;
+      }
+
+      const submitBtn = document.getElementById('submitBtn');
+      const originalText = submitBtn.textContent;
+      submitBtn.textContent = 'Processing...';
+      submitBtn.disabled = true;
+
+      try {
+        if (isLoginMode) {
+          // --- LOGIN MODE ---
+          const response = await fetch(`${API_URL}/auth/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+          });
+
+          let data = {};
+          const contentType = response.headers.get('content-type');
+          if (contentType && contentType.includes('application/json')) {
+            data = await response.json();
+          }
+
+          if (!response.ok) {
+            errorDiv.textContent = data.error || `Server error: ${response.status} ${response.statusText}`;
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+            return;
+          }
+
+          // Login successful
+          setActiveSession(data.user);
+          showNotification(`Welcome back, ${data.user.name}! 👋`);
+          setTimeout(() => {
+            goToMenu();
+          }, 1000);
+
+        } else {
+          // --- REGISTER MODE ---
+          const name = document.getElementById('fullName').value.trim();
+
+          if (!name) {
+            errorDiv.textContent = 'Name is required to register.';
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+            return;
+          }
+
+          // Check password length
+          if (password.length < 6) {
+            errorDiv.textContent = 'Password must be at least 6 characters.';
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+            return;
+          }
+
+          const response = await fetch(`${API_URL}/auth/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, password, role: 'student' })
+          });
+
+          let data = {};
+          const contentType = response.headers.get('content-type');
+          if (contentType && contentType.includes('application/json')) {
+            data = await response.json();
+          }
+
+          if (!response.ok) {
+            errorDiv.textContent = data.error || `Server error: ${response.status} ${response.statusText}`;
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+            return;
+          }
+
+          // Auto log in after registration
+          setActiveSession(data.user);
+          showNotification(`Account created successfully! Welcome, ${data.user.name}! 🎉`);
+          setTimeout(() => {
+            goToMenu();
+          }, 1000);
+        }
+      } catch (err) {
+        errorDiv.textContent = 'Unable to connect to the backend server. Please verify it is running.';
+        console.error(err);
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+      }
+    });
+
+    // Check if session is already active
+    function checkActiveSession() {
+      if (getActiveSession()) {
+        goToMenu(); // Already logged in, return to menu
+      }
+    }
+
+    checkActiveSession();
+  </script>
+</body>
+</html>

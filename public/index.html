@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<!-- DOCTYPE tells the browser this is an HTML5 document -->
+
+<html lang="en">
+<!-- lang="en" sets the language to English (helps screen readers & SEO) -->
+
+<head>
+  <!-- HEAD section: not visible on page, contains settings & links -->
+
+  <meta charset="UTF-8" />
+  <!-- UTF-8 supports all characters including ₹ symbol --> 
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Makes the site mobile-friendly and responsive -->
+
+  <title>QuickBite – Queue-Free Canteen</title>
+  <!-- EDIT THIS: Change "QuickBite" to your canteen's name -->
+
+  <meta name="description" content="Order your canteen food online, skip the queue, collect when ready!" />
+  <!-- EDIT THIS: Your canteen's description shown in Google search results -->
+
+  <!-- Google Fonts: loads Inter and Outfit fonts from the internet -->
+  <!-- EDIT: Change the font names in the URL and in style.css --font variable if you want different fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="style.css" />
+  <!-- Links the CSS file — all visual styling is in style.css -->
+
+</head>
+
+<body>
+<!-- BODY: Everything visible on the page goes here -->
+
+  <!-- ================================================
+       HEADER — Top navigation bar (always visible)
+       ================================================ -->
+  <header class="header" id="header">
+    <!-- .header styles are in style.css under "HEADER" section -->
+
+    <div class="header-inner container">
+    <!-- .container centers content and limits max width -->
+
+      <!-- ── LOGO AREA ── -->
+      <div class="logo">
+        <span class="logo-icon">🍽️</span>
+        <!-- EDIT: Change this emoji to match your canteen -->
+
+        <div>
+          <span class="logo-name">QuickBite</span>
+          <!-- EDIT: Replace "QuickBite" with your canteen name -->
+
+          <span class="logo-tag">Queue-Free Canteen</span>
+          <!-- EDIT: Replace with your tagline -->
+        </div>
+      </div>
+
+      <!-- ── NAVIGATION TABS ── -->
+      <!-- Each button switches between pages. data-page must match page IDs below -->
+      <nav class="nav-tabs" id="navTabs">
+        <button class="nav-tab active" data-page="menu" id="navMenu">🍕 Menu</button>
+        <!-- EDIT: Change emoji or label text. "active" class = currently selected tab -->
+
+        <button class="nav-tab" data-page="orders" id="navOrders">📋 My Orders</button>
+        <!-- Shows logged-in user's order history -->
+
+        <button class="nav-tab admin-only hidden" data-page="admin" id="navAdmin">⚙️ Admin</button>
+        <!-- Only visible to admin users. "hidden" class is removed by app.js when admin logs in -->
+      </nav>
+
+      <!-- ── HEADER RIGHT (Cart + Login) ── -->
+      <div class="header-right">
+
+        <!-- Cart icon button with item count badge -->
+        <button class="cart-btn" id="cartBtn" aria-label="Open cart">
+          🛒
+          <span class="cart-badge" id="cartBadge">0</span>
+          <!-- cart-badge shows number of items in cart. Updated by app.js -->
+        </button>
+
+        <button class="btn-outline btn-sm" id="loginBtn">Login</button>
+        <!-- Becomes logout button when user is logged in. Handled in app.js -->
+
+      </div>
+    </div>
+  </header>
+
+
+  <!-- ================================================
+       MAIN CONTENT AREA
+       ================================================ -->
+  <main class="main container">
+
+
+    <!-- ──────────────────────────────────────────
+         PAGE 1: MENU PAGE (default visible page)
+         ────────────────────────────────────────── -->
+    <section class="page active" id="menuPage">
+    <!-- "active" class makes this page visible. Only one page is active at a time -->
+
+
+      <!-- ── HERO BANNER (Top welcome section) ── -->
+      <div class="hero">
+
+        <div class="hero-text">
+          <h1 class="hero-title">
+            Skip the Queue.<br />
+            <span class="gradient-text">Order Smarter.</span>
+            <!-- EDIT: Change this headline to your own slogan -->
+          </h1>
+          <p class="hero-sub">
+            Browse the menu, add to cart, pay &amp; pick up when your token is called. Zero waiting in line.
+            <!-- EDIT: Change this description to explain your ordering process -->
+          </p>
+        </div>
+
+        <!-- ── Animated Token Display (decorative) ── -->
+        <div class="hero-visual">
+          <div class="token-demo">
+            <p class="token-label">Token System</p>
+            <div class="token-circle">
+              <span class="token-num">#24</span>
+              <!-- Demo token number shown in hero. Just decorative -->
+              <span class="token-ready">Ready!</span>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end .hero -->
+
+
+      <!-- ── SEARCH BAR ── -->
+      <div class="search-bar-wrap">
+        <div class="search-bar">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="searchInput" placeholder="Search for food…" autocomplete="off" />
+          <!-- EDIT: Change placeholder text. id="searchInput" is used by app.js for live search -->
+        </div>
+      </div>
+
+
+      <!-- ── CATEGORY FILTER PILLS ── -->
+      <!-- These buttons are generated automatically by app.js from CATEGORIES array -->
+      <!-- EDIT categories in app.js under "const CATEGORIES" -->
+      <div class="category-pills" id="categoryPills"></div>
+
+
+      <!-- ── MENU ITEMS GRID ── -->
+      <!-- Cards are generated automatically by app.js from MENU array -->
+      <!-- EDIT menu items in app.js under "const MENU" -->
+      <div class="menu-grid" id="menuGrid"></div>
+
+
+    </section><!-- end #menuPage -->
+
+
+    <!-- ──────────────────────────────────────────
+         PAGE 2: MY ORDERS PAGE
+         ────────────────────────────────────────── -->
+    <section class="page" id="ordersPage">
+    <!-- Hidden by default. Made active when "My Orders" tab is clicked -->
+
+      <h2 class="section-title">My Orders</h2>
+
+      <div id="ordersContainer">
+        <p class="empty-msg">No orders yet. Start ordering from the menu!</p>
+        <!-- Default message. Replaced by app.js with real order cards -->
+      </div>
+
+    </section><!-- end #ordersPage -->
+
+
+    <!-- ──────────────────────────────────────────
+         PAGE 3: ADMIN PAGE
+         ────────────────────────────────────────── -->
+    <section class="page hidden" id="adminPage">
+    <!-- Hidden for normal users. Visible only when admin logs in -->
+
+      <h2 class="section-title">⚙️ Admin Panel</h2>
+
+      <!-- Stats cards (total orders, revenue etc.) — filled by app.js -->
+      <div class="admin-stats" id="adminStats"></div>
+
+      <h3 class="sub-title">Live Orders Queue</h3>
+
+      <!-- Live order queue for admin to manage — filled by app.js -->
+      <div id="adminOrders"></div>
+
+    </section><!-- end #adminPage -->
+
+
+  </main><!-- end .main -->
+
+
+  <!-- ================================================
+       CART SIDEBAR (slides in from right)
+       ================================================ -->
+  <aside class="cart-sidebar" id="cartSidebar">
+  <!-- Shown/hidden by adding/removing "open" class via app.js -->
+
+    <!-- Cart Header -->
+    <div class="cart-header">
+      <h2>🛒 Your Cart</h2>
+      <button class="close-cart" id="closeCart">✕</button>
+      <!-- Closes the cart sidebar -->
+    </div>
+
+    <!-- Cart Items List — filled dynamically by app.js -->
+    <div class="cart-items" id="cartItems">
+      <p class="empty-msg">Your cart is empty.</p>
+      <!-- Default message when cart is empty -->
+    </div>
+
+    <!-- Cart Footer (total + place order) — hidden until items added -->
+    <div class="cart-footer" id="cartFooter" style="display:none">
+
+      <!-- Total price row -->
+      <div class="cart-total">
+        <span>Total</span>
+        <span id="cartTotal">₹0</span>
+        <!-- Updated by app.js as items are added/removed -->
+      </div>
+
+      <!-- Special instructions text box -->
+      <div class="special-note-wrap">
+        <label>Special instructions</label>
+        <textarea id="specialNote" placeholder="e.g. No onions, extra sauce…" rows="2"></textarea>
+        <!-- EDIT: Change placeholder to your canteen's example instructions -->
+      </div>
+
+      <!-- Place Order button -->
+      <button class="btn-primary w-full" id="placeOrderBtn">Place Order →</button>
+      <!-- Triggers order placement in app.js → placeOrder() function -->
+
+    </div><!-- end .cart-footer -->
+
+  </aside><!-- end .cart-sidebar -->
+
+  <!-- Dark overlay behind cart and modals -->
+  <div class="overlay" id="overlay"></div>
+  <!-- Clicking overlay closes any open panel/modal -->
+
+
+  <!-- ================================================
+       MODALS (popup dialogs)
+       ================================================ -->
+
+
+
+
+  <!-- ── MODAL 2: PAYMENT MODAL ── -->
+  <!-- Shown when user clicks "Place Order" in cart -->
+  <div class="modal" id="paymentModal">
+    <div class="modal-box pay-modal-box">
+
+      <button class="modal-close" id="closePayment">✕</button>
+
+      <h2 class="modal-title">💳 Choose Payment</h2>
+
+      <!-- Total amount being paid -->
+      <div class="pay-total-row">
+        <span>Order Total</span>
+        <span class="pay-total-amt" id="paymentTotalDisplay">₹0</span>
+      </div>
+
+      <!-- Payment method selector tabs: Cash / UPI / Card -->
+      <div class="pay-tabs">
+        <!-- EDIT: Add or remove payment methods by adding/removing buttons here -->
+        <button class="pay-tab active" id="payTab-cash"   onclick="selectPayMethod('cash')">💵 Cash</button>
+        <button class="pay-tab"        id="payTab-upi"    onclick="selectPayMethod('upi')">📲 UPI</button>
+        <button class="pay-tab"        id="payTab-card"   onclick="selectPayMethod('card')">💳 Card</button>
+      </div>
+
+      <!-- ── CASH PANEL ── -->
+      <!-- Shown when user selects Cash payment -->
+      <div class="pay-panel" id="payPanel-cash">
+        <div class="pay-info-box">
+          <div class="pay-icon">💵</div>
+          <p class="pay-info-title">Cash on Pickup</p>
+          <p class="pay-info-sub">
+            Pay ₹<span id="cashAmtDisplay">0</span> in cash when you collect your order at the counter.
+            <!-- EDIT: Change counter name or instructions here -->
+          </p>
+        </div>
+      </div>
+
+      <!-- ── UPI PANEL ── -->
+      <!-- Shown when user selects UPI payment -->
+      <div class="pay-panel" id="payPanel-upi" style="display:none">
+        <div class="pay-info-box">
+          <div class="pay-icon">📲</div>
+          <p class="pay-info-title">Pay via UPI</p>
+          <!-- EDIT: Replace with your actual UPI ID below -->
+          <p class="upi-id-display">your-upi-id@bank</p>
+          <p class="pay-info-sub">Scan the QR or enter the UPI ID in your payment app, then enter your UPI ID below to confirm.</p>
+          <div class="form-group" style="margin-top:16px">
+            <label>Your UPI ID</label>
+            <input type="text" id="upiId" placeholder="yourname@upi" />
+            <!-- User enters their UPI ID to confirm they have initiated payment -->
+          </div>
+        </div>
+      </div>
+
+      <!-- ── CARD PANEL ── -->
+      <!-- Shown when user selects Card payment -->
+      <div class="pay-panel" id="payPanel-card" style="display:none">
+        <div class="form-group">
+          <label>Card Number</label>
+          <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19"
+            oninput="this.value=this.value.replace(/[^\d]/g,'').replace(/(\d{4})/g,'$1 ').trim()"
+          />
+          <!-- oninput: auto-formats card number into groups of 4 digits -->
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div class="form-group">
+            <label>Expiry (MM/YY)</label>
+            <input type="text" id="cardExpiry" placeholder="09/27" maxlength="5" />
+          </div>
+          <div class="form-group">
+            <label>CVV</label>
+            <input type="text" id="cardCVV" placeholder="123" maxlength="3" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Cardholder Name</label>
+          <input type="text" id="cardName" placeholder="Name on card" />
+        </div>
+        <!-- NOTE: This is a demo form. Connect to Razorpay / Stripe for real payments -->
+        <p style="font-size:0.75rem;color:var(--text-dim);margin-bottom:8px">🔒 Demo mode — no real payment is processed</p>
+      </div>
+
+      <!-- Pay Now button (calls submitPayment() in app.js) -->
+      <button class="btn-primary w-full" id="payNowBtn" onclick="submitPayment()">Pay Now</button>
+
+    </div>
+  </div><!-- end #paymentModal -->
+
+
+  <!-- ── MODAL 3: ORDER CONFIRMED ── -->
+  <div class="modal" id="confirmModal">
+  <!-- Shown after a successful order is placed -->
+
+    <div class="modal-box confirm-box">
+
+      <div class="confirm-anim">🎉</div>
+      <!-- Animated emoji on order success. EDIT: Change to any emoji -->
+
+      <h2>Order Placed!</h2>
+      <!-- EDIT: Change success headline -->
+
+      <p>Your token number is</p>
+
+      <div class="big-token" id="confirmToken">#00</div>
+      <!-- Token number is filled by app.js automatically -->
+
+      <p class="confirm-sub">
+        Head to the counter when your token is called. You'll see live status in <strong>My Orders</strong>.
+        <!-- EDIT: Change instructions for customers -->
+      </p>
+      <!-- Shows which payment method was used -->
+      <p class="confirm-pay-method" id="confirmPayMethod">💵 Cash on Pickup</p>
+
+      <button class="btn-primary w-full" id="closeConfirm">Got it!</button>
+      <!-- Closes modal and switches to My Orders tab -->
+
+    </div>
+  </div><!-- end #confirmModal -->
+
+
+  <!-- ── MODAL 3: ITEM DETAIL ── -->
+  <div class="modal" id="itemModal">
+  <!-- Shown when user clicks on a food item image -->
+
+    <div class="modal-box item-modal-box">
+      <button class="modal-close" id="closeItem">✕</button>
+
+      <!-- Content is filled dynamically by app.js → openItemDetail() -->
+      <div id="itemModalContent"></div>
+    </div>
+
+  </div><!-- end #itemModal -->
+
+
+  <script src="app.js"></script>
+  <!-- Loads all JavaScript logic — must be at the bottom so HTML loads first -->
+
+</body>
+</html>

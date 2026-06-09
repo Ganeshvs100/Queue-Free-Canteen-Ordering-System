@@ -1,0 +1,12 @@
+# Exclude server-side dependencies (they will be installed on the hosting server automatically)
+server/node_modules/
+node_modules/
+
+# Exclude local environment/credential files
+server/.env
+.env
+
+# OS metadata files
+.DS_Store
+Thumbs.db
+desktop.ini
