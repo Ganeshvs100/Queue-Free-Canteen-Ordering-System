@@ -19,7 +19,7 @@ function getApiUrl() {
   }
   
   // If deployed frontend and backend are on different domains, replace the return below:
-  return 'https://queue-free-canteen-ordering-system-production.up.railway.app/api';
+   return 'https://queue-free-canteen-ordering-system.onrender.com/api';
   // return window.location.origin + '/api';
 }
 const API_URL = getApiUrl();
